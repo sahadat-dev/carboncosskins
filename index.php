@@ -108,9 +108,9 @@
 <li><a href="contact-us.php">Contact</a></li>
 <li><a href="faq.php">FAQ</a></li>
 </ul>					<div class="hidden_menu__footer">
-						<div class="social_icon__list"><a title="Tiktok" target="_blank" href="https://www.tiktok.com/@carboncoskins" class="img social_icon -opacity_hover"><noscript><img src="assets/images/social_tiktok.svg" alt="Tiktok"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Tiktok" data-src="/assets/images/social_tiktok.svg" class=" lazyload"></a>
-<a title="Facebook" target="_blank" href="https://www.facebook.com/carboncoskins" class="img social_icon -opacity_hover"><noscript><img src="assets/images/social_fb.svg" alt="Facebook"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Facebook" data-src="/assets/images/social_fb.svg" class=" lazyload"></a>
-<a title="Instagram" target="_blank" href="https://www.instagram.com/carboncoskins/" class="img social_icon -opacity_hover"><noscript><img src="assets/images/social_insta.svg" alt="Instagram"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Instagram" data-src="/assets/images/social_insta.svg" class=" lazyload"></a>
+						<div class="social_icon__list"><a title="Tiktok" target="_blank" href="https://www.tiktok.com/@eliteflyerbd" class="img social_icon -opacity_hover"><noscript><img src="assets/images/social_tiktok.svg" alt="Tiktok"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Tiktok" data-src="/assets/images/social_tiktok.svg" class=" lazyload"></a>
+<a title="Facebook" target="_blank" href="https://www.facebook.com/eliteflyerbd" class="img social_icon -opacity_hover"><noscript><img src="assets/images/social_fb.svg" alt="Facebook"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Facebook" data-src="/assets/images/social_fb.svg" class=" lazyload"></a>
+<a title="Instagram" target="_blank" href="https://www.instagram.com/eliteflyerbd/" class="img social_icon -opacity_hover"><noscript><img src="assets/images/social_insta.svg" alt="Instagram"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Instagram" data-src="/assets/images/social_insta.svg" class=" lazyload"></a>
 </div>						<div class="separator"></div>
 						<a href="terms-and-conditions.php" class="terms_use -opacity_hover">Terms and conditions</a>
 					</div>
@@ -323,9 +323,9 @@
 </ul>
 </div>
 			</div>
-			<div class="footer_social footer__col"><a title="Tiktok" target="_blank" href="https://www.tiktok.com/@carboncoskins"><noscript><img src="assets/images/social_tiktok.svg" alt="Tiktok"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Tiktok" data-src="/assets/images/social_tiktok.svg" class=" lazyload"></a>
-<a title="Facebook" target="_blank" href="https://www.facebook.com/carboncoskins"><noscript><img src="assets/images/social_fb.svg" alt="Facebook"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Facebook" data-src="/assets/images/social_fb.svg" class=" lazyload"></a>
-<a title="Instagram" target="_blank" href="https://www.instagram.com/carboncoskins/"><noscript><img src="assets/images/social_insta.svg" alt="Instagram"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Instagram" data-src="/assets/images/social_insta.svg" class=" lazyload"></a>
+			<div class="footer_social footer__col"><a title="Tiktok" target="_blank" href="https://www.tiktok.com/@eliteflyerbd"><noscript><img src="assets/images/social_tiktok.svg" alt="Tiktok"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Tiktok" data-src="/assets/images/social_tiktok.svg" class=" lazyload"></a>
+<a title="Facebook" target="_blank" href="https://www.facebook.com/eliteflyerbd"><noscript><img src="assets/images/social_fb.svg" alt="Facebook"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Facebook" data-src="/assets/images/social_fb.svg" class=" lazyload"></a>
+<a title="Instagram" target="_blank" href="https://www.instagram.com/eliteflyerbd/"><noscript><img src="assets/images/social_insta.svg" alt="Instagram"></noscript><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Instagram" data-src="/assets/images/social_insta.svg" class=" lazyload"></a>
 </div>		</div>
 		<div class="copyright__row">
 			<div class="copyright">
