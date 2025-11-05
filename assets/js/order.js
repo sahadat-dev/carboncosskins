@@ -606,14 +606,17 @@ function canvas_load_frame(frame_path, callback) {
 };
 
 function canvas_load_bg(bg_color_name, bg_type, callback) {
-	var bg_front_name = window.template_directory_uri+'/images/cards/' + bg_type + '/' + bg_color_name + '.jpg';
-	if (typeof window.card_bg == 'object' && typeof window.card_bg[bg_color_name] == 'string') {
-		bg_front_name = window.card_bg[bg_color_name];
-	}
-	var bg_back_name = window.template_directory_uri+'/images/cards/simple/' + bg_color_name + '.jpg';
-	// if (bg_color_name == 'blackgold') {
-	// 	bg_back_name = window.template_directory_uri+'/images/cards/simple/gold.jpg';
+	console.log(bg_type, bg_color_name);
+	var bg_front_name = window.template_directory_uri+'/images/cards/categories/' + bg_type + '/' + bg_color_name + '.jpg';
+	console.log(bg_front_name);
+
+	// if (typeof window.card_bg == 'object' && typeof window.card_bg[bg_color_name] == 'string') {
+	// 	bg_front_name = window.card_bg[bg_color_name];
+	// 	console.log(bg_front_name);
 	// }
+	var bg_back_name = window.template_directory_uri+'/images/cards/simple/' + bg_color_name + '.jpg';
+	console.log(bg_back_name);
+	
 	fabric.Image.fromURL(bg_front_name, function(oImg) {
 		if (canvas_obj.bg_img_front != null) {
 			canvas_obj.fabric_front.remove(canvas_obj.bg_img_front);

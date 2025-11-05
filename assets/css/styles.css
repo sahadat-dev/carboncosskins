@@ -2802,14 +2802,16 @@ textarea::-webkit-scrollbar-thumb {
 
 @media only screen and (max-width: 1199px) {
 	.header__blured {
-		padding: 30px 0px;
+		padding: 10px 0px 5px 0px;
 		/* background-color: rgba(0, 0, 0, 1); */
 	}
 
 	.hidden_menu {
 		max-width: 100%;
 	}
-
+	.header_logo_white {
+		width: 90px;
+	}
 	.main_section {
 		padding-top: 92px;
 		padding-bottom: 92px;

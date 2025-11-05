@@ -349,7 +349,7 @@ if ($('.category_card .card_choose__row').length) {
 				var $card=$(this);
 				const card_name=$card.data('card-name');
 				$card.data('card-color', card_color).attr('data-card-color', card_color).find('.best_sellers_card_bg').attr('src', $card.data('metal-'+card_color));
-				$card.find('.best_sellers_card_link').attr('href','/order/?template='+card_name+'&color='+card_color);
+				$card.find('.best_sellers_card_link').attr('href','/order.php?template='+card_name+'&color='+card_color);
 			});
 		}
 	});
@@ -363,7 +363,7 @@ if ($('.category_card .card_choose__row').length) {
 			$this.closest('.color__row').find('.color.active').removeClass('active');
 			$this.addClass('active');
 			$card.data('card-color', card_color).attr('data-card-color', card_color).find('.best_sellers_card_bg').attr('src', window.template_directory_uri+'/images/cards/'+card_name+'/'+card_color+'.jpg');
-			$card.find('.best_sellers_card_link').attr('href','/order/?template='+card_name+'&color='+card_color);
+			$card.find('.best_sellers_card_link').attr('href','/order.php?template='+card_name+'&color='+card_color);
 		}
 	});
 }

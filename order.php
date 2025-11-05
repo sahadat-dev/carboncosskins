@@ -179,6 +179,7 @@ $selected_color = isset($_GET['color']) ? strtolower($_GET['color']) : 'black';
 
 		<?php if (isset($_GET['template'])): ?>
 			<script>
+				// find the work of it
 				window.card_bg = {
 					black: "/assets/images/uploads/mclub-b.jpg",
 					gold: "/assets/images/uploads/mclub-g.jpg",
