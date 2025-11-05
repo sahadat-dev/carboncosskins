@@ -138,9 +138,10 @@
 }
 
 .card__pre_view-section {
-	height: 100vh;
-	padding-top: 126px;
+	margin-top: 100px;
+	margin-bottom: 50px;
 	width: 100%;
+	height: 100vh;
 }
 
 .card__pre_view-content {
@@ -151,6 +152,7 @@
 	flex-direction: column;
 	justify-content: flex-start;
 	max-width: 730px;
+	
 }
 
 .card__pre_view-content .card {
@@ -257,7 +259,7 @@
 	bottom: 0;
 	border-left: 1px solid #DEDEDE;
 	padding-top: 90px;
-	padding-bottom: 108px;
+	padding-bottom: 40px;
 	transition: 0.4s;
 }
 
@@ -326,7 +328,7 @@
 }
 
 .card__settings_navigation {
-	padding: 36px 0px;
+	padding: 20px 0px;
 }
 
 .card__settings_nav_block {
@@ -730,7 +732,7 @@
 }
 
 .card__settings_footer {
-	padding: 28px 0px;
+	padding: 10px 0px;
 	position: absolute;
 	bottom: 0;
 	right: 0;
@@ -2054,9 +2056,8 @@ html body form .order_agree_checkbox_container input,
 	/*order page*/
 
 	.card__pre_view-section {
-		padding-bottom: 97px;
-		min-height: 100vh;
-		height: auto;
+		margin-bottom: 10px;
+		
 	}
 
 	.card__settings_section {
@@ -2200,11 +2201,11 @@ html body form .order_agree_checkbox_container input,
 	.mobile_swiped {
 		overflow: hidden;
 		max-height: 100%;
-		padding-bottom: 21px;
+		padding-bottom: 0px;
 	}
 
 	.card__settings_section.active .mobile_swiped {
-		overflow: auto;
+		overflow-y: auto;
 	}
 
 	.card__settings_nav_block .nav__item {
@@ -2890,6 +2891,7 @@ html body .orderToggleActiveContainer input {
 }
 .card_settings_cardholdername_input_box {
 	width: 100%;
+	margin-top: 10px;
 }
 .card_settings_cardnumberon_input_box {
 	width: 50%;
@@ -2914,7 +2916,7 @@ html body .orderToggleActiveContainer input {
 }
 .card_settings_total_container {
 	width: 290px;
-	margin: 30px 0 45px;
+	margin: 10px 0 10px;
 }
 @media only screen and (max-width: 1199px) {
 	.card_settings_total_container {

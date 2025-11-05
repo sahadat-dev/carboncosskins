@@ -88,8 +88,8 @@
 	<div class="header__blured">
 		<div class="container">
 			<div class="header__visible">
-								<a href="index.php" class="logo img header_logo_img">
-						<img class="header_logo_white skip-lazy" src="assets/images/logo_white.svg" alt>
+								<a href="index.php" class="logo img header_logo_img spin3d-container">
+						<img class="header_logo_white skip-lazy spin3d" src="assets/images/logo_white.svg" alt>
 						<img class="header_logo_black skip-lazy" src="assets/images/logo_black.svg" alt>
 					</a>
 													<div class="open_menu toggle_menu_button">
