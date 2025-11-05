@@ -992,11 +992,11 @@ function canvas_resize() {
 	canvas_refresh();
 }
 
-function order_create_ajax(payment_id) {
+function order_create_ajax(transaction_id) {
 	$('.payment_modal').removeClass('active');
 	$('.email_submitting').addClass('active');
 	var form_data=new FormData();
-	form_data.append('payment_id', payment_id);
+	form_data.append('transaction_id', transaction_id);
 	form_data.append('person_name', order_info.person_name);
 	form_data.append('person_email', order_info.person_email);
 	form_data.append('address_country', order_info.address_country);
@@ -1059,7 +1059,7 @@ function order_create_ajax(payment_id) {
 						$('.modal__wrapper .modal_content').removeClass('active');
 						$('.payment_success_modal').addClass('active');
 					} else {
-						$('.payment_verify_text').css('color','red').html('Error saving your order: '+reply+'<br>Payment successfull with id #'+payment_id+'.<br>Please contact us to place your order.');
+						$('.payment_verify_text').css('color','red').html('Error saving your order: '+reply+'<br>Payment successfull with id #'+transaction_id+'.<br>Please contact us to place your order.');
 						$('.payment_verify_preloader').css('visibility', 'hidden');
 					}
 					$('.order_create_form_button').hide();
@@ -1068,7 +1068,7 @@ function order_create_ajax(payment_id) {
 					}
 				},
 				error: function() {
-					$('.payment_verify_text').css('color','red').html('Error saving your order. Please check Internet connection.<br>Payment successfull with id #'+payment_id+'.<br>Please contact us to place your order.');
+					$('.payment_verify_text').css('color','red').html('Error saving your order. Please check Internet connection.<br>Payment successfull with id #'+transaction_id+'.<br>Please contact us to place your order.');
 					$('.payment_verify_preloader').css('visibility', 'hidden');
 					$('.order_create_form_button').hide();
 				},
@@ -1716,94 +1716,160 @@ $(function() {
 	// })
 
 
-	var stripe = Stripe("pk_live_51Hw4iYJFAQeMdV8rwLplq122ZKq8fiL6h201DZRxedJWbtdwY4CEdcW0ZOkw8oPea0qNiY2rOnnsq4HDbWgVv9Ko00CRHiB8UX");
-	
 	// The items the customer wants to buy
-	// Disable the button until we have Stripe set up on the page
-	document.querySelector("button").disabled = true;
-	var getStripe=function() {
-		var form_data = new FormData();
-		form_data.append('action', 'stripe_payment__init');
-		form_data.append('body', JSON.stringify(order_info));
-		fetch("/wp-admin/admin-ajax.php", {
-			method: 'post',
-			body: form_data,
-		})
-		.then(function(result) {
-			// console.log(result);
-			return result.json();
-		})
-		.then(function(data) {
-			// console.log(data);
-			if (typeof data.error != 'undefined') {
-				alert('Error starting payment: '+data.error);
-			} else {
-				var elements = stripe.elements();
-				var style = {
-					base: {
-						color: "#32325d",
-						fontFamily: 'Arial, sans-serif',
-						fontSmoothing: "antialiased",
-						fontSize: "16px",
-						"::placeholder": {
-							color: "#32325d"
-						}
-					},
-					invalid: {
-						fontFamily: 'Arial, sans-serif',
-						color: "#fa755a",
-						iconColor: "#fa755a"
-					}
-				};
-				var card = elements.create("card", { style: style, hidePostalCode : true });
-				// Stripe injects an iframe into the DOM
-				card.mount("#card-element");
-				card.on("change", function(event) {
-					// Disable the Pay button if there are no card details in the Element
-					document.querySelector("button").disabled = event.empty;
-					document.querySelector("#card-error").textContent = event.error ? event.error.message : "";
-				});
-				var form = document.getElementById("payment-form");
-				form.addEventListener("submit", function(event) {
-					event.preventDefault();
-					// Complete payment when the submit button is clicked
-					payWithCard(stripe, card, data.clientSecret);
-				});
-			}
-		});
-	}
+	// Enable the button for manual payment
+	document.querySelector("#submit").disabled = false;
+	
+	// Handle payment method selection
+	$('input[name="payment_method"]').on('change', function() {
+		const selectedMethod = $(this).val();
+		// Update active class on payment method containers
+		$('.payment-method').removeClass('active');
+		$(this).closest('.payment-method').addClass('active');
+		// Hide all payment details first
+		$('.payment-details').hide();
+		// Show the selected payment method details
+		$('#' + selectedMethod + '-details').show();
 
-	// Calls stripe.confirmCardPayment
-	// If the card requires authentication Stripe shows a pop-up modal to
-	// prompt the user to enter authentication details without leaving your page.
-	var payWithCard = function(stripe, card, clientSecret) {
-		loading(true);
-		stripe
-			.confirmCardPayment(clientSecret, {
-				payment_method: {
-					card: card
-				}
-			})
-			.then(function(result) {
-				if (result.error) {
-					// Show error to your customer
-					showError(result.error.message);
-				} else {
-					// The payment succeeded!
-					orderComplete(result.paymentIntent.id);
-				}
-			});
-	};
+		// Show/hide transaction details based on payment method
+		if (selectedMethod === 'cash-on-delivery') {
+			$('#transaction-details-section').hide();
+		} else {
+			$('#transaction-details-section').show();
+		}
+	});
+	
+	// Handle payment form submission
+	$('#payment-form').on('submit', function(e) {
+		e.preventDefault();
+		
+		// Show loading state
+		$('#spinner').removeClass('hidden');
+		$('#button-text').text('Processing...');
+		$('#submit').prop('disabled', true);
+		
+		const paymentMethod = $('input[name="payment_method"]:checked').val();
+		
+		let transactionId = null;
+		let paymentScreenshot = null;
+
+		if (paymentMethod !== 'cash-on-delivery') {
+			transactionId = $('#transaction-id').val();
+			paymentScreenshot = $('#payment-screenshot')[0].files[0];
+		}
+		
+		// Show payment verification modal
+		$('.payment_modal').hide();
+		$('.email_submitting').show();
+		
+		// Process the payment
+		processManualPayment(transactionId, paymentMethod, paymentScreenshot);
+	});
+	function processManualPayment(transactionId, paymentMethod, screenshot) {
+    const form_data = new FormData();
+    form_data.append('transaction_id', transactionId);
+    form_data.append('payment_method', paymentMethod);
+    form_data.append('person_name', order_info.person_name);
+    form_data.append('person_email', order_info.person_email);
+    form_data.append('address_country', order_info.address_country);
+    form_data.append('address_state', order_info.address_state);
+    form_data.append('address_city', order_info.address_city);
+    form_data.append('address_zipcode', order_info.address_zipcode);
+    form_data.append('address_street_house', order_info.address_street_house);
+    form_data.append('comment', order_info.comment);
+    form_data.append('promo_code', order_info.promo_code);
+    
+    if (order_info.card_care) {
+        form_data.append('card_care', order_info.card_care);
+    }
+    
+    form_data.append('card_color', order_info.card_color);
+    form_data.append('card_template', order_info.card_template);
+    form_data.append('shipping', order_info.shipping);
+    form_data.append('total', order_info.total_cost);
+    form_data.append('currency', order_info.currency);
+    form_data.append('card_person_name', $('[name="order_person_name"]').val());
+    form_data.append('card_holder', $('[name="cardhoder_name"]').val());
+    form_data.append('card_text', $('[name="text_to_card_editor_text"]').val());
+    
+    var input_img = $('[name="logo_to_card_file"]').get(0).files;
+    if (input_img.length == 1) {
+        const ext = input_img[0].name.substring(input_img[0].name.lastIndexOf('.') + 1);
+        if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'svg') {
+            form_data.append('img_logo', input_img[0], 'logo.' + ext);
+        }
+    }
+    
+    if (screenshot) {
+        form_data.append('payment_screenshot', screenshot, 'payment_proof.' + screenshot.name.split('.').pop());
+    }
+    
+    canvas_obj.fabric_front.discardActiveObject();
+    canvas_obj.fabric_back.discardActiveObject();
+    canvas_refresh();
+
+    card_front_side_canvas.toBlob(function(blob) {
+        form_data.append('img_front', blob, 'front.png');
+        card_back_side_canvas.toBlob(function(blob) {
+            form_data.append('img_back', blob, 'back.png');
+            form_data.append('action', 'manual_order_create');
+            
+            $.ajax({
+                method: 'post',
+                url: "process-manual-order.php",
+                data: form_data,
+                contentType: false,
+                processData: false,
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener('progress', function(evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = 0;
+                            if (typeof evt.loaded != 'undefined' && typeof evt.total != 'undefined') {
+                                percentComplete = Math.round(evt.loaded / evt.total * 10000) / 100;
+                            }
+                            $('.email_submitting_progress').css('width', Math.round(percentComplete * 100) / 100 + 'px');
+                        }
+                    }, false);
+                    return xhr;
+                },
+                success: function(reply) {
+                    loading(false);
+                    const payok = reply == 'ok';
+                    if (payok) {
+                        $('.modal__wrapper .modal_content').removeClass('active');
+                        $('.payment_success_modal').addClass('active');
+                    } else {
+                        showError('Error saving your order: ' + reply);
+                    }
+                    
+                    if (payok && typeof fbq == 'function') {
+                        fbq('track', 'Purchase', {value: order_info.total_cost, currency: order_info.currency});
+                    }
+                },
+                error: function() {
+                    loading(false);
+                    showError('Error saving your order. Please check your internet connection.');
+                },
+            });
+        });
+    });
+}
+
+	function showError(message) {
+    loading(false);
+    const messageBlock = $('.message-info-block');
+    messageBlock.html(`<div class="error">${message}</div>`);
+    messageBlock.show();
+    
+    setTimeout(function() {
+        messageBlock.fadeOut();
+    }, 5000);
+}
 	/* ------- UI helpers ------- */
 	// Shows a success message when the payment is complete
 	var orderComplete = function(paymentIntentId) {
 		loading(false);
-		// $(".result-message .paymentId").html(paymentIntentId)
-		// .setAttribute(
-		//   "href",
-		//   "https://dashboard.stripe.com/test/payments/" + paymentIntentId
-		// );
-		// $(".result-message").removeClass("hidden");
 		order_create_ajax(paymentIntentId);
 		document.querySelector("button").disabled = true;
 	};
@@ -1928,19 +1994,17 @@ $(function() {
 		}
 	});
 	$('.final_step').on('click', function() {
-		if (!$('#order_agree_checkbox_id').prop('checked')) {
-			$('.order_agree_checkbox_container').addClass('error');
-		} else {
-			$('.order_agree_checkbox_container').removeClass('error');
-			blockBody(false);
-			$(this).closest('.step').removeClass('active').closest('.order_modal').removeClass('active')
-				.next('.payment_modal').addClass('active')
-				.closest('.modal_content').find('.current_step_row li.active').removeClass('active')
-				.prev('li').addClass('active');
-				getStripe();
-				// order_create_ajax(0);
-		}
-	});
+    if (!$('#order_agree_checkbox_id').prop('checked')) {
+        $('.order_agree_checkbox_container').addClass('error');
+    } else {
+        $('.order_agree_checkbox_container').removeClass('error');
+        blockBody(false);
+        $(this).closest('.step').removeClass('active').closest('.order_modal').removeClass('active')
+            .next('.payment_modal').addClass('active')
+            .closest('.modal_content').find('.current_step_row li.active').removeClass('active')
+            .prev('li').addClass('active');
+    }
+});
 
 	$('.back_step').on('click', function() {
 		$(this).closest('.step.active').removeClass('active')
