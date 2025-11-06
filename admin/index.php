@@ -100,9 +100,18 @@ $orders = $is_logged_in ? getOrders() : [];
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#ffc40d">
+    <meta name="theme-color" content="#ffffff">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carbon Co Skins - Admin</title>
+    <title>
+        Elite Flyer BD - Admin</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <style>
         .admin-container {
@@ -145,7 +154,7 @@ $orders = $is_logged_in ? getOrders() : [];
         }
 
         .admin-table tr:hover {
-            background-color:rgb(143, 143, 143);
+            background-color: rgb(143, 143, 143);
 
         }
 
@@ -402,129 +411,144 @@ $orders = $is_logged_in ? getOrders() : [];
                     </div>
 
                     <div class="invoice-grid">
+                        <!-- Shipping Details -->
                         <div class="invoice-section">
-                            <h3>Shipping Information</h3>
+                            <h3>Shipping Details</h3>
+
                             <div class="invoice-item">
                                 <span class="invoice-item-label">Name:</span>
-                                <span class="invoice-item-value"><?php echo $current_order['person_name'] ?? 'N/A'; ?></span>
+                                <span class="invoice-item-value"><?php echo $current_order['shipping_details']['person_name'] ?? 'N/A'; ?></span>
                             </div>
+
                             <div class="invoice-item">
                                 <span class="invoice-item-label">Email:</span>
-                                <span class="invoice-item-value"><?php echo $current_order['person_email'] ?? 'N/A'; ?></span>
+                                <span class="invoice-item-value"><?php echo $current_order['shipping_details']['person_email'] ?? 'N/A'; ?></span>
                             </div>
+
                             <div class="invoice-item">
                                 <span class="invoice-item-label">Address:</span>
                                 <span class="invoice-item-value">
                                     <?php
-                                    if (isset($current_order['address']) && is_array($current_order['address'])) {
-                                        $address_parts = [];
-                                        if (!empty($current_order['address']['street_house'])) $address_parts[] = $current_order['address']['street_house'];
-                                        if (!empty($current_order['address']['city'])) $address_parts[] = $current_order['address']['city'];
-                                        if (!empty($current_order['address']['state'])) $address_parts[] = $current_order['address']['state'];
-                                        if (!empty($current_order['address']['zipcode'])) $address_parts[] = $current_order['address']['zipcode'];
-                                        if (!empty($current_order['address']['country'])) $address_parts[] = $current_order['address']['country'];
-                                        echo implode(', ', $address_parts) ?: 'N/A';
+                                    if (isset($current_order['shipping_details']['address']) && is_array($current_order['shipping_details']['address'])) {
+                                        $address = $current_order['shipping_details']['address'];
+                                        $parts = [];
+                                        if (!empty($address['street_house'])) $parts[] = $address['street_house'];
+                                        if (!empty($address['city'])) $parts[] = $address['city'];
+                                        if (!empty($address['state'])) $parts[] = $address['state'];
+                                        if (!empty($address['zipcode'])) $parts[] = $address['zipcode'];
+                                        if (!empty($address['country'])) $parts[] = $address['country'];
+                                        echo implode(', ', $parts) ?: 'N/A';
                                     } else {
                                         echo 'N/A';
                                     }
                                     ?>
                                 </span>
                             </div>
-                        </div>
 
-                        <div class="invoice-section">
-                            <h3>Card Information</h3>
-                            <div class="invoice-item">
-                                <span class="invoice-item-label">Card Color:</span>
-                                <span class="invoice-item-value"><?php echo isset($current_order['order_details']['card_color']) ? $current_order['order_details']['card_color'] : ($current_order['card_color'] ?? 'N/A'); ?></span>
-                            </div>
-                            <div class="invoice-item">
-                                <span class="invoice-item-label">Card Template:</span>
-                                <span class="invoice-item-value"><?php echo isset($current_order['order_details']['card_template']) ? $current_order['order_details']['card_template'] : ($current_order['card_template'] ?? 'N/A'); ?></span>
-                            </div>
-                            <div class="invoice-item">
-                                <span class="invoice-item-label">Card Holder Name:</span>
-                                <span class="invoice-item-value"><?php echo $current_order['card_holder'] ?? 'N/A'; ?></span>
-                            </div>
-                            <div class="invoice-item">
-                                <span class="invoice-item-label">Card Text:</span>
-                                <span class="invoice-item-value"><?php echo $current_order['card_text'] ?? 'N/A'; ?></span>
-                            </div>
-                            <?php if (!empty($current_order['card_care'])): ?>
-                                <div class="invoice-item">
-                                    <span class="invoice-item-label">Card Care:</span>
-                                    <span class="invoice-item-value"><?php echo $current_order['card_care'] ? 'Yes' : 'No'; ?></span>
-                                </div>
-                                <div class="invoice-item">
-                                    <span class="invoice-item-label">Card Care Fee:</span>
-                                    <span class="invoice-item-value"><?php echo ($current_order['currency'] ?? '') . ' ' . ($current_order['card_care_fee'] ?? 'N/A'); ?></span>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
-                    <div class="invoice-grid">
-                        <div class="invoice-section">
-                            <h3>Shipping Information</h3>
                             <div class="invoice-item">
                                 <span class="invoice-item-label">Shipping Method:</span>
-                                <span class="invoice-item-value"><?php echo isset($current_order['order_details']['shipping']) ? $current_order['order_details']['shipping'] : ($current_order['shipping'] ?? 'N/A'); ?></span>
+                                <span class="invoice-item-value"><?php echo $current_order['shipping_details']['card_shipping_method'] ?? 'N/A'; ?></span>
                             </div>
-                            <div class="invoice-item">
-                                <span class="invoice-item-label">Shipping Fee:</span>
-                                <span class="invoice-item-value"><?php echo isset($current_order['order_details']['currency']) ? $current_order['order_details']['currency'] : ($current_order['currency'] ?? '') . ' ' . ($current_order['shipping_fee'] ?? 'N/A'); ?></span>
-                            </div>
+
                         </div>
 
+                        <!-- Order Details -->
                         <div class="invoice-section">
-                            <h3>Payment Information</h3>
+                            <h3>Order Details</h3>
                             <div class="invoice-item">
-                                <span class="invoice-item-label">Payment Method:</span>
-                                <span class="invoice-item-value"><?php echo $current_order['payment_method'] ?? 'N/A'; ?></span>
+                                <span class="invoice-item-label">Card Template:</span>
+                                <span class="invoice-item-value"><?php echo $current_order['order_details']['card_template'] ?? 'N/A'; ?></span>
                             </div>
+
                             <div class="invoice-item">
-                                <span class="invoice-item-label">Transaction ID:</span>
-                                <span class="invoice-item-value"><?php echo $current_order['transaction_id'] ?? 'N/A'; ?></span>
+                                <span class="invoice-item-label">Card Color:</span>
+                                <span class="invoice-item-value"><?php echo $current_order['order_details']['card_color'] ?? 'N/A'; ?></span>
                             </div>
+
                             <div class="invoice-item">
-                                <span class="invoice-item-label">Production Fee:</span>
-                                <span class="invoice-item-value"><?php echo isset($current_order['order_details']['currency']) ? $current_order['order_details']['currency'] : ($current_order['currency'] ?? '') . ' ' . ($current_order['production_fee'] ?? 'N/A'); ?></span>
+                                <span class="invoice-item-label">Card Holder:</span>
+                                <span class="invoice-item-value"><?php echo $current_order['order_details']['card_holder'] ?? 'N/A'; ?></span>
                             </div>
-                            <?php if (!empty($current_order['promo_code']) || !empty($current_order['coupon'])): ?>
+                            
+                            <div class="invoice-item">
+                                <span class="invoice-item-label">Comment:</span>
+                                <span class="invoice-item-value"><?php echo $current_order['order_details']['comment']; ?></span>
+                            </div>
+                            
+                            <div class="invoice-item">
+                                <span class="invoice-item-label">Card Text:</span>
+                                <span class="invoice-item-value"><?php echo $current_order['order_details']['card_text'] ?? 'N/A'; ?></span>
+                            </div>
+
+                            <?php if (!empty($current_order['order_details']['card_care'])): ?>
                                 <div class="invoice-item">
-                                    <span class="invoice-item-label">Coupon Code:</span>
-                                    <span class="invoice-item-value"><?php echo $current_order['promo_code'] ?? $current_order['coupon'] ?? 'N/A'; ?></span>
-                                </div>
-                                <div class="invoice-item">
-                                    <span class="invoice-item-label">Discount:</span>
-                                    <span class="invoice-item-value"><?php echo isset($current_order['order_details']['currency']) ? $current_order['order_details']['currency'] : ($current_order['currency'] ?? '') . ' ' . ($current_order['discount'] ?? 'N/A'); ?></span>
+                                    <span class="invoice-item-label">Card Care:</span>
+                                    <span class="invoice-item-value">
+                                        <?php echo $current_order['order_details']['card_care'] ? 'Yes' : 'No'; ?>
+                                    </span>
                                 </div>
                             <?php endif; ?>
+                            
+                        </div>
+
+                        <!-- Payment Details -->
+                        <div class="invoice-section">
+                            <h3>Payment Details</h3>
+
+                            <div class="invoice-item">
+                                <span class="invoice-item-label">Card Fee:</span>
+                                <span class="invoice-item-value"><?php echo ($current_order['payment_details']['currency'] ?? '') . ' ' . ($current_order['payment_details']['card_cost'] ?? 'N/A'); ?></span>
+                            </div>
+
+                            <div class="invoice-item">
+                                <span class="invoice-item-label">Card Color Fee:</span>
+                                <span class="invoice-item-value"><?php echo ($current_order['payment_details']['currency'] ?? '') . ' ' . ($current_order['payment_details']['card_color_cost'] ?? 'N/A'); ?></span>
+                            </div>
+
+                            <?php if (!empty($current_order['payment_details']['card_care_cost'])): ?>
+                                <div class="invoice-item">
+                                    <span class="invoice-item-label">Card Care Fee:</span>
+                                    <span class="invoice-item-value">
+                                        <?php echo ($current_order['payment_details']['currency'] ?? '') . ' ' . ($current_order['payment_details']['card_care_cost'] ?? 'N/A'); ?>
+                                    </span>
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="invoice-item">
+                                <span class="invoice-item-label">Shipping Fee:</span>
+                                <span class="invoice-item-value"><?php echo ($current_order['payment_details']['currency'] ?? 'USD') . ' ' . ($current_order['payment_details']['card_shipping_cost'] ?? 'N/A'); ?></span>
+                            </div>
+
+                            <div class="invoice-item">
+                                <span class="invoice-item-label">Payment Method:</span>
+                                <span class="invoice-item-value"><?php echo $current_order['payment_details']['payment_method'] ?? 'N/A'; ?></span>
+                            </div>
+
+                            <div class="invoice-item">
+                                <span class="invoice-item-label">Transaction ID:</span>
+                                <span class="invoice-item-value"><?php echo $current_order['payment_details']['transaction_id'] ?? 'N/A'; ?></span>
+                            </div>
+
+                            <div class="invoice-item">
+                                <span class="invoice-item-label">Promo Code:</span>
+                                <span class="invoice-item-value"><?php echo $current_order['order_details']['promo_code'] ?? 'N/A'; ?></span>
+                            </div>
+
                         </div>
                     </div>
 
+                    <!-- Total Section -->
                     <div class="invoice-total">
                         <div class="invoice-item">
                             <span class="invoice-item-label">Total Amount:</span>
                             <span class="invoice-total-amount">
                                 <?php
-                                $currency = isset($current_order['order_details']['currency']) ? $current_order['order_details']['currency'] : ($current_order['currency'] ?? 'USD');
-                                $total = isset($current_order['order_details']['total']) ? $current_order['order_details']['total'] : ($current_order['total'] ?? 'N/A');
-                                echo $currency . ' ' . $total;
+                                echo ($current_order['payment_details']['currency'] ?? 'USD') . ' ' . ($current_order['payment_details']['total'] ?? 'N/A');
                                 ?>
                             </span>
                         </div>
                     </div>
 
-                    <?php if (!empty($current_order['comment'])): ?>
-                        <div class="invoice-section">
-                            <h3>Additional Information</h3>
-                            <div class="invoice-item">
-                                <span class="invoice-item-label">Comment:</span>
-                                <span class="invoice-item-value"><?php echo $current_order['comment']; ?></span>
-                            </div>
-                        </div>
-                    <?php endif; ?>
 
                     <div class="invoice-section">
                         <h3>Order Images</h3>
@@ -604,6 +628,7 @@ $orders = $is_logged_in ? getOrders() : [];
                         </div>
                     </div>
                 </div>
+
             <?php else: ?>
                 <!-- Orders List View -->
                 <table class="admin-table">
@@ -612,11 +637,11 @@ $orders = $is_logged_in ? getOrders() : [];
                             <th>Order ID</th>
                             <th>Date</th>
                             <th>Customer</th>
-                            <th>Payment Method</th>
+                            <!-- <th>Payment Method</th>
                             <th>Transaction ID</th>
-                            <th>Total</th>
+                            <th>Total</th> -->
                             <th>Status</th>
-                            <th>Actions</th>
+                            <!-- <th>Actions</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -627,18 +652,18 @@ $orders = $is_logged_in ? getOrders() : [];
                         <?php else: ?>
                             <?php foreach ($orders as $order): ?>
                                 <tr>
-                                    <td><?php echo $order['order_id'] ?? 'N/A'; ?></td>
-                                    <td><?php echo $order['date'] ?? 'N/A'; ?></td>
-                                    <td><?php echo $order['person_name'] ?? 'N/A'; ?></td>
-                                    <td><?php echo $order['payment_method'] ?? 'N/A'; ?></td>
+                                    <td>
+                                        <a href="?order_id=<?php echo $order['order_id']; ?>" class="btn"><?php echo $order['order_id'] ?? 'N/A'; ?></a>
+                                    </td>
+                                    <td><?php echo $order['order_date'] ?? 'N/A'; ?></td>
+                                    <td><?php echo $order['shipping_details']['person_name'] ?? 'N/A'; ?></td>
+                                    <!-- <td><?php echo $order['payment_method'] ?? 'N/A'; ?></td>
                                     <td><?php echo $order['transaction_id'] ?? 'N/A'; ?></td>
-                                    <td><?php echo ($order['currency'] ?? '') . ' ' . ($order['total'] ?? 'N/A'); ?></td>
+                                    <td><?php echo ($order['currency'] ?? '') . ' ' . ($order['total'] ?? 'N/A'); ?></td> -->
                                     <td class="status-<?php echo strtolower($order['status'] ?? 'pending'); ?>">
                                         <?php echo $order['status'] ?? 'Pending'; ?>
                                     </td>
-                                    <td>
-                                        <a href="?order_id=<?php echo $order['order_id']; ?>" class="btn">View Details</a>
-                                    </td>
+
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>

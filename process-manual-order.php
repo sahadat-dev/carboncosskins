@@ -22,18 +22,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address_city = isset($_POST['address_city']) ? $_POST['address_city'] : '';
     $address_zipcode = isset($_POST['address_zipcode']) ? $_POST['address_zipcode'] : '';
     $address_street_house = isset($_POST['address_street_house']) ? $_POST['address_street_house'] : '';
+    $card_holder = isset($_POST['card_holder']) ? $_POST['card_holder'] : '';
+    $card_text = isset($_POST['card_text']) ? $_POST['card_text'] : '';
     $comment = isset($_POST['comment']) ? $_POST['comment'] : '';
     $promo_code = isset($_POST['promo_code']) ? $_POST['promo_code'] : '';
 
     // Get order details
     $card_color = isset($_POST['card_color']) ? $_POST['card_color'] : '';
+    $card_color_cost = isset($_POST['card_color_cost']) ? $_POST['card_color_cost'] : '';
     $card_template = isset($_POST['card_template']) ? $_POST['card_template'] : '';
-    $shipping = isset($_POST['shipping']) ? $_POST['shipping'] : '';
+    $card_cost = isset($_POST['card_cost']) ? $_POST['card_cost'] : '';
+    $card_shipping_method = isset($_POST['card_shipping_method']) ? $_POST['card_shipping_method'] : '';
+    $card_shipping_cost = isset($_POST['card_shipping_cost']) ? $_POST['card_shipping_cost'] : '';
+    $card_care = isset($_POST['card_care']) ? $_POST['card_care'] : '';
+    $card_care_cost = isset($_POST['card_care_cost']) ? $_POST['card_care_cost'] : '';
     $total = isset($_POST['total']) ? $_POST['total'] : '';
     $currency = isset($_POST['currency']) ? $_POST['currency'] : '';
 
     // Create a unique order ID
-    $order_id = 'ORD-' . strtoupper(substr(md5(uniqid()), 0, 8));
+    $order_id = 'ORD-' . strtoupper(substr(md5(uniqid()), 0, 6));
 
     // Handle file uploads
     $upload_dir = 'uploads/orders/' . $order_id . '/';
@@ -69,31 +76,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Save order details to a file (in a real system, you'd use a database)
     $order_data = [
         'order_id' => $order_id,
-        'transaction_id' => $transaction_id,
-        'payment_method' => $payment_method,
-        'payment_proof' => $payment_proof,
-        'person_name' => $person_name,
-        'person_email' => $person_email,
-        'address' => [
-            'country' => $address_country,
-            'state' => $address_state,
-            'city' => $address_city,
-            'zipcode' => $address_zipcode,
-            'street_house' => $address_street_house,
+        'order_date' => date('D, d M Y h:i A'),
+        'shipping_details' => [
+            'person_name' => $person_name,
+            'person_email' => $person_email,
+            'address' => [
+                'country' => $address_country,
+                'state' => $address_state,
+                'city' => $address_city,
+                'zipcode' => $address_zipcode,
+                'street_house' => $address_street_house,
+            ],
+            'card_shipping_method' => $card_shipping_method,
         ],
         'order_details' => [
-            'card_color' => $card_color,
             'card_template' => $card_template,
-            'shipping' => $shipping,
-            'total' => $total,
-            'currency' => $currency,
+            'card_color' => $card_color,
+            'card_holder' => $card_holder,
+            'comment' => $comment,
+            'card_text' => $card_text,
+            'card_care' => $card_care,
         ],
-        'comment' => $comment,
-        'promo_code' => $promo_code,
+        'payment_details' => [
+            'card_cost' => $card_cost,
+            'card_color_cost' => $card_color_cost,
+            'card_care_cost' => $card_care_cost,
+            'card_shipping_cost' => $card_shipping_cost,
+            'total' => $total,
+            'transaction_id' => $transaction_id,
+            'payment_method' => $payment_method,
+            'payment_proof' => $payment_proof,
+            'currency' => $currency,
+            'promo_code' => $promo_code,
+        ],
         'front_image' => $front_image,
         'back_image' => $back_image,
         'logo_image' => $logo_image,
-        'order_date' => date('Y-m-d H:i:s'),
     ];
 
     // Save order data to a JSON file

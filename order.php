@@ -246,7 +246,7 @@ $selected_color = isset($_GET['color']) ? strtolower($_GET['color']) : 'black';
 										<div class="pre_input_text">
 											Card Holder Name (<span class="field">0</span>/<span class="max_field">26</span>)
 										</div>
-										<input type="text" class="field_show input_cardhoder_name" name="cardhoder_name" placeholder="(Name Here)" maxlength="26" value>
+										<input type="text" class="field_show input_cardholder_name" name="cardholder_name" placeholder="(Name Here)" maxlength="26" value>
 									</div>
 									<div class="input_box input_box_carddropdown card_settings_cardnumberon_input_box">
 										<input type="text" name="where_cardnumberon" value="Front" class="hide" autocomplete="off">
@@ -516,11 +516,11 @@ $selected_color = isset($_GET['color']) ? strtolower($_GET['color']) : 'black';
 								<div class="price_col card_settings_price_col">
 									<ul>
 										<li>
-											<p class="price_col_title">Mirror Card</p>
-											<p class="price_col_value"><span class="price_plus">+</span> <span class="currency"><span class="currency_prefix">$</span></span><span class="price total_mirror_price">NaN</span><span class="currency"><span class="currency_suffix"></span></span> <span class="currency_code">None</span></p>
+											<p class="price_col_title">Card Colour Fee</p>
+											<p class="price_col_value"><span class="price_plus">+</span> <span class="currency"><span class="currency_prefix">$</span></span><span class="price card_color_cost">NaN</span><span class="currency"><span class="currency_suffix"></span></span> <span class="currency_code">None</span></p>
 										</li>
 										<li>
-											<p class="price_col_title">Card</p>
+											<p class="price_col_title">Card Fee</p>
 											<p class="price_col_value"><span class="currency"><span class="currency_prefix">$</span></span><span class="price total_card_price">NaN</span><span class="currency"><span class="currency_suffix"></span></span> <span class="currency_code">None</span></p>
 										</li>
 										<li class="total">
@@ -882,9 +882,9 @@ $selected_color = isset($_GET['color']) ? strtolower($_GET['color']) : 'black';
 								</div>
 								<div class="col radio_list text">
 									<p><strong>Shipping Method</strong></p>
-									<div class="card_shipping_container"><input type="radio" name="card_shipping" id="radio_order_free" value="free" data-price="NaN"><label for="radio_order_free">Free Express Shipping in Australia</label></div>
-									<div class="card_shipping_container"><input type="radio" name="card_shipping" id="radio_order_standard" value="standard" data-price="NaN"><label for="radio_order_standard">International Standard Shipping</label></div>
-									<div class="card_shipping_container"><input type="radio" name="card_shipping" id="radio_order_express" value="express" data-price="NaN"><label for="radio_order_express">International Express Shipping</label></div>
+									<div class="card_shipping_container"><input type="radio" name="card_shipping_method" id="radio_order_free" value="free" data-price="NaN"><label for="radio_order_free">Free Express Shipping in Australia</label></div>
+									<div class="card_shipping_container"><input type="radio" name="card_shipping_method" id="radio_order_standard" value="standard" data-price="NaN"><label for="radio_order_standard">International Standard Shipping</label></div>
+									<div class="card_shipping_container"><input type="radio" name="card_shipping_method" id="radio_order_express" value="express" data-price="NaN"><label for="radio_order_express">International Express Shipping</label></div>
 								</div>
 								<div class="col step_content-price_col">
 									<div class="price_col">
@@ -953,7 +953,7 @@ $selected_color = isset($_GET['color']) ? strtolower($_GET['color']) : 'black';
 							<div class="payment-method">
 								<input type="radio" id="bank-transfer" name="payment_method" value="bank">
 								<label for="bank-transfer">
-									<img src="assets/images/bkash.png" alt="">
+									<img src="assets/images/bank.png" alt="">
 									Bank Transfer</label>
 							</div>
 							<div class="payment-method">

@@ -191,11 +191,11 @@ function canvas_text_logo_color_update(bg_color_name) {
 			fill: text_color,
 		});
 	}
-	canvas_load_logo_from_input($('[name="logo_to_card_file"]'), false);
+	// canvas_load_logo_from_input($('[name="logo_to_card_file"]'), false); //commented by SH
 }
 
 function canvas_obj_append() {
-	const card_holder_name_default_text = holdername_text_filter($('[name="cardhoder_name"]').val());
+	const card_holder_name_default_text = holdername_text_filter($('[name="cardholder_name"]').val());
 	const card_number_default_text = '0000 0000 0000 0000';
 	const card_validthru_default_text = 'VALID\nTHRU';
 	const card_month_year_default_text = '55/55';
@@ -614,7 +614,7 @@ function canvas_load_bg(bg_color_name, bg_type, callback) {
 	// 	bg_front_name = window.card_bg[bg_color_name];
 	// 	console.log(bg_front_name);
 	// }
-	var bg_back_name = window.template_directory_uri+'/images/cards/simple/' + bg_color_name + '.jpg';
+	var bg_back_name = window.template_directory_uri+'/images/cards/categories/simple/' + bg_color_name + '.jpg';
 	console.log(bg_back_name);
 	
 	fabric.Image.fromURL(bg_front_name, function(oImg) {
@@ -882,6 +882,7 @@ function canvas_resize() {
 	if (canvas_obj.card_logo_img_front != null) {
 		var card_logo_scale_x = parseInt($('[name="logo_to_card_width"]').val());
 		var card_logo_scale_y = parseInt($('[name="logo_to_card_height"]').val());
+		console.log(card_logo_scale_x, card_logo_scale_y);
 		if (isNaN(card_logo_scale_x)) { card_logo_scale_x = 50; }
 		if (isNaN(card_logo_scale_y)) { card_logo_scale_y = 50; }
 		canvas_obj.card_logo_img_front.set({
@@ -1011,14 +1012,18 @@ function order_create_ajax(transaction_id) {
 	form_data.append('promo_code', order_info.promo_code);
 	if (order_info.card_care) {
 		form_data.append('card_care', order_info.card_care);
+		form_data.append('card_care_cost', order_info.card_care_cost);
 	}
 	form_data.append('card_color', order_info.card_color);
+	form_data.append('card_color_cost', order_info.card_color_cost);
 	form_data.append('card_template', order_info.card_template);
-	form_data.append('shipping', order_info.shipping);
+	form_data.append('card_cost', order_info.card_cost);
+	form_data.append('card_shipping_method', order_info.card_shipping_method);
+	form_data.append('card_shipping_cost', order_info.card_shipping_cost);
 	form_data.append('total', order_info.total_cost);
 	form_data.append('currency', order_info.currency);
 	form_data.append('card_person_name', $('[name="order_person_name"]').val());
-	form_data.append('card_holder', $('[name="cardhoder_name"]').val());
+	form_data.append('card_holder', $('[name="cardholder_name"]').val());
 	form_data.append('card_text', $('[name="text_to_card_editor_text"]').val());
 	var input_img=$('[name="logo_to_card_file"]').get(0).files;
 	if ( input_img.length==1 ) {
@@ -1092,7 +1097,7 @@ $(function() {
 	waitForWebfonts([{ family: 'Copperplate Gothic', weight: '300' }], function() {
 		canvas_init();
 		var card_holder_name_text_front_change_timeout = null;
-		$('[name="cardhoder_name"]').on('input cut paste', function() {
+		$('[name="cardholder_name"]').on('input cut paste', function() {
 			var $input=$(this);
 			clearTimeout(card_holder_name_text_front_change_timeout);
 			card_holder_name_text_front_change_timeout = setTimeout(function() {
@@ -1110,7 +1115,7 @@ $(function() {
 				}
 			}, 300);
 		});
-		$('[name="cardhoder_name"]').on('change', function() {
+		$('[name="cardholder_name"]').on('change', function() {
 			var $input=$(this);
 			var input_text=$input.val().trim();
 			if (input_text!=$input.val()) {
@@ -1490,10 +1495,11 @@ function calc_order_form() {
 		tax_percent = taxes[currency].percent;
 	}
 	const card_cost = prices.card[currency];
+	console.log(card_cost);
 	const card_color_cost = parseInt($('[name="color_radio"]:checked').closest('div').find('.price_value').html());
 	const card_care_cost = parseInt($('[name="card_care"]:checked').closest('div').find('.price_value').html()) || 0;
 	const card_production_cost = card_cost + card_color_cost + card_care_cost;
-	const card_shipping_cost = parseInt($('[name="card_shipping"]:checked').data('price'));
+	const card_shipping_cost = parseInt($('[name="card_shipping_method"]:checked').data('price'));
 	const card_discount_value = parseInt($('[name="promo_code"]').data('discount'));
 	const card_discount_unit = $('[name="promo_code"]').data('discount-unit');
 	
@@ -1506,11 +1512,11 @@ function calc_order_form() {
 	const card_total_cost = card_production_cost + card_shipping_cost + card_tax_cost - card_discount_cost;
 	
 	$('.total_card_price').html(card_cost);
-	$('.total_mirror_price').html(card_color_cost);
+	$('.card_color_cost').html(card_color_cost);
 	if (card_color_cost>0) {
-		$('.total_mirror_price').closest('li').slideDown();
+		$('.card_color_cost').closest('li').slideDown();
 	} else {
-		$('.total_mirror_price').closest('li').slideUp();
+		$('.card_color_cost').closest('li').slideUp();
 	}
 	$('.total_mcsum_price').html(card_cost+card_color_cost);
 	$('.total_production_price').html(card_production_cost);
@@ -1530,9 +1536,12 @@ function calc_order_form() {
 	}
 	order_info.currency = currency;
 	order_info.card_color = $('[name="color_radio"]:checked').val();
+	order_info.card_color_cost = card_color_cost;
 	order_info.card_template = $('[name="card_template"]').val();
+	order_info.card_cost = card_cost;
 	order_info.card_care = $('[name="card_care"]:checked').length > 0;
-	order_info.shipping = $('[name="card_shipping"]:checked').val();
+	order_info.card_care_cost = card_care_cost;
+	order_info.card_shipping_method = $('[name="card_shipping_method"]:checked').val();
 	order_info.person_name = $('[name="order_person_name"]').val();
 	order_info.person_email = $('[name="order_person_email"]').val();
 	order_info.address_country = $('[name="order_address_country"]').val();
@@ -1542,68 +1551,12 @@ function calc_order_form() {
 	order_info.address_street_house = $('[name="order_address_street_house"]').val();
 	order_info.promo_code = $('[name="promo_code"]').val();
 	order_info.comment = $('[name="order_comment"]').val();
-	order_info.total_cost=card_total_cost;
+	order_info.card_shipping_cost = card_shipping_cost;
+	order_info.total_cost = card_total_cost;
+	console.log(order_info);
 }
 
-// function order_create_ajax_paypal() {
-// 	var form_data=new FormData();
-// 	form_data.append('person_name', order_info.person_name);
-// 	form_data.append('person_email', order_info.person_email);
-// 	form_data.append('address_country', order_info.address_country);
-// 	form_data.append('address_state', order_info.address_state);
-// 	form_data.append('address_city', order_info.address_city);
-// 	form_data.append('address_zipcode', order_info.address_zipcode);
-// 	form_data.append('address_street_house', order_info.address_street_house);
-// 	form_data.append('comment', order_info.comment);
-// 	form_data.append('promo_code', order_info.promo_code);
-// 	if (order_info.card_care) {
-// 		form_data.append('card_care', order_info.card_care);
-// 	}
-// 	form_data.append('card_color', order_info.card_color);
-// 	form_data.append('card_template', order_info.card_template);
-// 	form_data.append('shipping', order_info.shipping);
-// 	form_data.append('total', order_info.total_cost);
-// 	form_data.append('currency', order_info.currency);
-// 	form_data.append('card_person_name', $('[name="order_person_name"]').val());
-// 	form_data.append('card_holder', $('[name="cardhoder_name"]').val());
-// 	form_data.append('card_text', $('[name="text_to_card_editor_text"]').val());
-// 	var input_img=$('[name="logo_to_card_file"]').get(0).files;
-// 	if ( input_img.length==1 ) {
-// 		const ext = input_img[0].name.substring(input_img[0].name.lastIndexOf('.') + 1);
-// 		if (ext=='png' || ext=='jpg' || ext=='jpeg' || ext=='svg' ) {
-// 			form_data.append( 'img_logo', input_img[0], 'logo.'+ext );
-// 		}
-// 	}
-//
-// 	canvas_obj.fabric_front.discardActiveObject();
-// 	canvas_obj.fabric_back.discardActiveObject();
-// 	canvas_refresh();
-//
-// 	card_front_side_canvas.toBlob(function(blob) {
-// 		form_data.append('img_front', blob, 'front.png');
-// 		card_back_side_canvas.toBlob(function(blob) {
-// 			form_data.append('img_back', blob, 'back.png');
-// 			form_data.append('paypalcheckout', 'create');
-// 			form_data.append('action', 'paypal_payment__init');
-// 			fetch("/wp-admin/admin-ajax.php", {
-// 				method: 'post',
-// 				body: form_data,
-// 			})
-// 			.then(function(result) {
-// 				return result.clone().json();
-// 			})
-// 			.then(function(data) {
-// 				if (typeof data.error != 'undefined') {
-// 					alert('Error starting payment: '+data.error);
-// 				} else if(typeof data.linkPay != 'undefined') {
-// 					window.location.href = data.linkPay;
-// 				} else {
-// 					alert('Error processing payment');
-// 				}
-// 			});
-// 		});
-// 	});
-// }
+//paypal order removed by SH
 
 $(function() {
 	$('[name="currency"]').on('change', function() {
@@ -1618,7 +1571,7 @@ $(function() {
 		});
 		$('.card_care_price_value').html(prices.card_care[currency]);
 		var checked = true;
-		$('[name="card_shipping"]').each(function() {
+		$('[name="card_shipping_method"]').each(function() {
 			var $input = $(this);
 			var input_value = $input.val();
 			if (typeof prices.shipping[input_value] != 'undefined' && typeof prices.shipping[input_value][currency] != 'undefined') {
@@ -1769,106 +1722,110 @@ $(function() {
 		processManualPayment(transactionId, paymentMethod, paymentScreenshot);
 	});
 	function processManualPayment(transactionId, paymentMethod, screenshot) {
-    const form_data = new FormData();
-    form_data.append('transaction_id', transactionId);
-    form_data.append('payment_method', paymentMethod);
-    form_data.append('person_name', order_info.person_name);
-    form_data.append('person_email', order_info.person_email);
-    form_data.append('address_country', order_info.address_country);
-    form_data.append('address_state', order_info.address_state);
-    form_data.append('address_city', order_info.address_city);
-    form_data.append('address_zipcode', order_info.address_zipcode);
-    form_data.append('address_street_house', order_info.address_street_house);
-    form_data.append('comment', order_info.comment);
-    form_data.append('promo_code', order_info.promo_code);
-    
-    if (order_info.card_care) {
-        form_data.append('card_care', order_info.card_care);
-    }
-    
-    form_data.append('card_color', order_info.card_color);
-    form_data.append('card_template', order_info.card_template);
-    form_data.append('shipping', order_info.shipping);
-    form_data.append('total', order_info.total_cost);
-    form_data.append('currency', order_info.currency);
-    form_data.append('card_person_name', $('[name="order_person_name"]').val());
-    form_data.append('card_holder', $('[name="cardhoder_name"]').val());
-    form_data.append('card_text', $('[name="text_to_card_editor_text"]').val());
-    
-    var input_img = $('[name="logo_to_card_file"]').get(0).files;
-    if (input_img.length == 1) {
-        const ext = input_img[0].name.substring(input_img[0].name.lastIndexOf('.') + 1);
-        if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'svg') {
-            form_data.append('img_logo', input_img[0], 'logo.' + ext);
-        }
-    }
-    
-    if (screenshot) {
-        form_data.append('payment_screenshot', screenshot, 'payment_proof.' + screenshot.name.split('.').pop());
-    }
-    
-    canvas_obj.fabric_front.discardActiveObject();
-    canvas_obj.fabric_back.discardActiveObject();
-    canvas_refresh();
+		const form_data = new FormData();
+		form_data.append('transaction_id', transactionId);
+		form_data.append('payment_method', paymentMethod);
+		form_data.append('person_name', order_info.person_name);
+		form_data.append('person_email', order_info.person_email);
+		form_data.append('address_country', order_info.address_country);
+		form_data.append('address_state', order_info.address_state);
+		form_data.append('address_city', order_info.address_city);
+		form_data.append('address_zipcode', order_info.address_zipcode);
+		form_data.append('address_street_house', order_info.address_street_house);
+		form_data.append('comment', order_info.comment);
+		form_data.append('promo_code', order_info.promo_code);
+		
+		if (order_info.card_care) {
+			form_data.append('card_care', order_info.card_care);
+			form_data.append('card_care_cost', order_info.card_care_cost);
+		}
+		
+		form_data.append('card_color', order_info.card_color);
+		form_data.append('card_color_cost', order_info.card_color_cost);
+		form_data.append('card_template', order_info.card_template);
+		form_data.append('card_cost', order_info.card_cost);
+		form_data.append('card_shipping_method', order_info.card_shipping_method);
+		form_data.append('card_shipping_cost', order_info.card_shipping_cost);
+		form_data.append('total', order_info.total_cost);
+		form_data.append('currency', order_info.currency);
+		form_data.append('card_person_name', $('[name="order_person_name"]').val());
+		form_data.append('card_holder', $('[name="cardholder_name"]').val());
+		form_data.append('card_text', $('[name="text_to_card_editor_text"]').val());
+		
+		var input_img = $('[name="logo_to_card_file"]').get(0).files;
+		if (input_img.length == 1) {
+			const ext = input_img[0].name.substring(input_img[0].name.lastIndexOf('.') + 1);
+			if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'svg') {
+				form_data.append('img_logo', input_img[0], 'logo.' + ext);
+			}
+		}
+		
+		if (screenshot) {
+			form_data.append('payment_screenshot', screenshot, 'payment_proof.' + screenshot.name.split('.').pop());
+		}
+		
+		canvas_obj.fabric_front.discardActiveObject();
+		canvas_obj.fabric_back.discardActiveObject();
+		canvas_refresh();
 
-    card_front_side_canvas.toBlob(function(blob) {
-        form_data.append('img_front', blob, 'front.png');
-        card_back_side_canvas.toBlob(function(blob) {
-            form_data.append('img_back', blob, 'back.png');
-            form_data.append('action', 'manual_order_create');
-            
-            $.ajax({
-                method: 'post',
-                url: "process-manual-order.php",
-                data: form_data,
-                contentType: false,
-                processData: false,
-                xhr: function() {
-                    var xhr = new window.XMLHttpRequest();
-                    xhr.upload.addEventListener('progress', function(evt) {
-                        if (evt.lengthComputable) {
-                            var percentComplete = 0;
-                            if (typeof evt.loaded != 'undefined' && typeof evt.total != 'undefined') {
-                                percentComplete = Math.round(evt.loaded / evt.total * 10000) / 100;
-                            }
-                            $('.email_submitting_progress').css('width', Math.round(percentComplete * 100) / 100 + 'px');
-                        }
-                    }, false);
-                    return xhr;
-                },
-                success: function(reply) {
-                    loading(false);
-                    const payok = reply == 'ok';
-                    if (payok) {
-                        $('.modal__wrapper .modal_content').removeClass('active');
-                        $('.payment_success_modal').addClass('active');
-                    } else {
-                        showError('Error saving your order: ' + reply);
-                    }
-                    
-                    if (payok && typeof fbq == 'function') {
-                        fbq('track', 'Purchase', {value: order_info.total_cost, currency: order_info.currency});
-                    }
-                },
-                error: function() {
-                    loading(false);
-                    showError('Error saving your order. Please check your internet connection.');
-                },
-            });
-        });
-    });
-}
+		card_front_side_canvas.toBlob(function(blob) {
+			form_data.append('img_front', blob, 'front.png');
+			card_back_side_canvas.toBlob(function(blob) {
+				form_data.append('img_back', blob, 'back.png');
+				form_data.append('action', 'manual_order_create');
+				
+				$.ajax({
+					method: 'post',
+					url: "process-manual-order.php",
+					data: form_data,
+					contentType: false,
+					processData: false,
+					xhr: function() {
+						var xhr = new window.XMLHttpRequest();
+						xhr.upload.addEventListener('progress', function(evt) {
+							if (evt.lengthComputable) {
+								var percentComplete = 0;
+								if (typeof evt.loaded != 'undefined' && typeof evt.total != 'undefined') {
+									percentComplete = Math.round(evt.loaded / evt.total * 10000) / 100;
+								}
+								$('.email_submitting_progress').css('width', Math.round(percentComplete * 100) / 100 + 'px');
+							}
+						}, false);
+						return xhr;
+					},
+					success: function(reply) {
+						loading(false);
+						const payok = reply == 'ok';
+						if (payok) {
+							$('.modal__wrapper .modal_content').removeClass('active');
+							$('.payment_success_modal').addClass('active');
+						} else {
+							showError('Error saving your order: ' + reply);
+						}
+						
+						if (payok && typeof fbq == 'function') {
+							fbq('track', 'Purchase', {value: order_info.total_cost, currency: order_info.currency});
+						}
+					},
+					error: function() {
+						loading(false);
+						showError('Error saving your order. Please check your internet connection.');
+					},
+				});
+			});
+		});
+	}
 
 	function showError(message) {
-    loading(false);
-    const messageBlock = $('.message-info-block');
-    messageBlock.html(`<div class="error">${message}</div>`);
-    messageBlock.show();
-    
-    setTimeout(function() {
-        messageBlock.fadeOut();
-    }, 5000);
-}
+		loading(false);
+		const messageBlock = $('.message-info-block');
+		messageBlock.html(`<div class="error">${message}</div>`);
+		messageBlock.show();
+		
+		setTimeout(function() {
+			messageBlock.fadeOut();
+		}, 5000);
+	}
 	/* ------- UI helpers ------- */
 	// Shows a success message when the payment is complete
 	var orderComplete = function(paymentIntentId) {
@@ -1968,7 +1925,7 @@ $(function() {
 		calc_order_form();
 	});
 	
-	$('[name="card_shipping"],[name="card_care"]').on('change', function() {
+	$('[name="card_shipping_method"],[name="card_care"]').on('change', function() {
 		calc_order_form();
 	});
 	
@@ -1997,17 +1954,17 @@ $(function() {
 		}
 	});
 	$('.final_step').on('click', function() {
-    if (!$('#order_agree_checkbox_id').prop('checked')) {
-        $('.order_agree_checkbox_container').addClass('error');
-    } else {
-        $('.order_agree_checkbox_container').removeClass('error');
-        blockBody(false);
-        $(this).closest('.step').removeClass('active').closest('.order_modal').removeClass('active')
-            .next('.payment_modal').addClass('active')
-            .closest('.modal_content').find('.current_step_row li.active').removeClass('active')
-            .prev('li').addClass('active');
-    }
-});
+		if (!$('#order_agree_checkbox_id').prop('checked')) {
+			$('.order_agree_checkbox_container').addClass('error');
+		} else {
+			$('.order_agree_checkbox_container').removeClass('error');
+			blockBody(false);
+			$(this).closest('.step').removeClass('active').closest('.order_modal').removeClass('active')
+				.next('.payment_modal').addClass('active')
+				.closest('.modal_content').find('.current_step_row li.active').removeClass('active')
+				.prev('li').addClass('active');
+		}
+	});
 
 	$('.back_step').on('click', function() {
 		$(this).closest('.step.active').removeClass('active')
@@ -2027,10 +1984,6 @@ $(function() {
 			$('.close_modal').click();
 		}
 	});
-	// $('#payment-request-button-paypal').click(function() {
-	// 	loading(true);
-	// 	order_create_ajax_paypal()
-	// });
 
 	function getParameterByName(name, url = window.location.href) {
 	    name = name.replace(/[\[\]]/g, '\\$&');
@@ -2041,50 +1994,6 @@ $(function() {
 	    return decodeURIComponent(results[2].replace(/\+/g, ' '));
 	}
 
-	// PAYPAL
-	// var success = getParameterByName('buycomplite');
-	// if(success && success == 'y') {
-	//
-	// 	var paymentId = getParameterByName('paymentId');
-	// 	var PayerID = getParameterByName('PayerID');
-	// 	var token = getParameterByName('token');
-	//
-	// 	if(paymentId && PayerID) {
-	// 		$('body').addClass('loadexecute');
-	// 		var form_data = new FormData();
-	// 		form_data.append('paymentId', paymentId);
-	// 		form_data.append('PayerID', PayerID);
-	// 		form_data.append('token', token);
-	// 		form_data.append('paypalcheckout', 'final');
-	// 		form_data.append('action', 'paypal_payment__init');
-	//
-	// 		setTimeout(function() {
-	// 			fetch("/wp-admin/admin-ajax.php", {
-	// 				method: 'post',
-	// 				body: form_data,
-	// 			})
-	// 			.then(function(result) {
-	// 				console.log(result);
-	// 				return result.clone().json();
-	// 			})
-	// 			.then(function(data) {
-	// 				console.log(data);
-	// 				const payok=typeof data.status != 'undefined' && data.status == 'approved';
-	// 				$('body').removeClass('loadexecute');
-	// 				// alert(data.status);
-	// 				if(payok) {
-	// 					$('.modal__wrapper .modal_content').removeClass('active');
-	//					$('.payment_success_modal').addClass('active');
-	// 				} else {
-	// 					alert(data.error);
-	// 				}
-	// 				if (payok && typeof fbq == 'function') {
-	// 					fbq('track', 'Purchase', {value: order_info.total_cost, currency: order_info.currency});
-	// 				}
-	// 			})
-	// 		}, 500);
-	// 	}
-	// }
 });
 
 $(function() {

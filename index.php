@@ -124,8 +124,8 @@
 		<video src="assets/video/video-2c4ca.mp4?1" muted autoplay playsinline width="100%">
 	</video></div>
 	<div class="container">
-		<h1 class="title_1 text-animation-element"> Contactless Metal Credit &amp; Debit Cards</h1>
-		<p class="text_1 text-animation-element"></p>
+		<h1 class="title_1 text-animation-element">Premium Feelings</h1>
+		<p class="text_1 text-animation-element">With Customized Metal Debit &amp; Credit Cards</p>
 		<div class="index-head-buttons">
 			<div class="index-head-button">
 				<a href="order.php" class="white_button text-animation-element">Design Your Own</a>
