@@ -243,7 +243,7 @@
 					</div>
 				</div>				<div class="card__slide">
 					<div class="card__slide-img">
-						<a data-link="/best-sellers/" href="best-sellers.php" class="best_sellers_card_img best_sellers_card_view_more">
+						<a data-link="/best-sellers.php" href="best-sellers.php" class="best_sellers_card_img best_sellers_card_view_more">
 							<span class="best_sellers_card_bg">
 								<span class="best_sellers_card_view_more_text">View More</span>
 							</span>
